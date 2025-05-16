@@ -7,8 +7,9 @@ import { AppServer } from "./presentation/server";
 })()
 
 async function main(){
-    new AppServer({
+    const server= new AppServer({
         port: envs.PORT,
         routes: AppRoutes.routes,
     });
+    await server.start();
 }

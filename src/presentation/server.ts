@@ -18,6 +18,11 @@ export class AppServer {
   }
 
   async start() {
+    //middlewares
+    this.app.use(express.json());
+    // to use data from x-www-form-urlencoded or json body
+    this.app.use(express.urlencoded({extended:true}));
+
     this.app.use(this.routes);
 
     this.app.listen(this.port, () => {
