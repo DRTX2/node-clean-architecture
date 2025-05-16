@@ -1,20 +1,23 @@
 import { Request, Response } from "express";
 import { RegisterUserDto } from "../../domain";
 
-export class AuthController{
-    // constructor(private readonly){
+export class AuthController {
+  // constructor(private readonly){
 
-    // }
-    
-    registerUser=  (req:Request,res:Response):Response=>{
-        const [error,registerUserDto]=RegisterUserDto.create(req.body);
+  // }
 
-        if (error) return res.status(400).json({ message: 'Invalid input', error });
+  registerUser = async (req: Request, res: Response): Promise<void> => {
+    const [error, registerUserDto] = await RegisterUserDto.create(req.body);
 
-        return res.json(registerUserDto);
+    if (error) {
+      res.status(400).json({ message: "Invalid input", error });
+      return;
     }
 
-    loginUser= (req:Request,res:Response)=>{
-        res.json("loginUser controller");
-    }
+    res.json(registerUserDto);
+  };
+
+  loginUser = (req: Request, res: Response) => {
+    res.json("loginUser controller");
+  };
 }
