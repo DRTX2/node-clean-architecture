@@ -20,7 +20,7 @@ export class AppServer {
   async start() {
     //middlewares
     this.app.use(express.json());
-    // to use data from x-www-form-urlencoded or json body
+    // to use data from x-www-form-urlencoded or json body, extended: true, refers to nested(anidado) objects with complex structures using the property with a  true value.
     this.app.use(express.urlencoded({extended:true}));
 
     this.app.use(this.routes);
