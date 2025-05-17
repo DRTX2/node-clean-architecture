@@ -4,6 +4,7 @@ export class CustomError extends Error {
     public readonly message: string
   ) {
     super(message);
+    Object.setPrototypeOf(this, CustomError.prototype);
   }
 
   static badRequest = (message: string) => new CustomError(400, message);
