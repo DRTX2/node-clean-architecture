@@ -12,7 +12,7 @@ import { UserMapper } from "../mappers/user.mapper";
 type HashFunction = (password: string) => string;
 type CompareFunction = (password: string, hashedPassword: string) => boolean;
 
-export class AuthDatasourceImpl implements AuthDataSource {
+export class AuthDatasourceMongoImpl implements AuthDataSource {
   constructor(
     private readonly hashFunction: HashFunction = BcryptAdapter.hash,
     private readonly compareFunction: CompareFunction = BcryptAdapter.compare
@@ -50,7 +50,7 @@ export class AuthDatasourceImpl implements AuthDataSource {
     try {
       // verificate if email is already registered
       const user = await UserModel.findOne({ email });
-      if (!user) throw CustomError.badRequest("Email not registered");
+      if (!user) throw CustomError.badRequest("User does not registered");
 
       return UserMapper.userEntityFromObject(user);
     } catch (error) {

@@ -1,22 +1,28 @@
 import { Router } from "express";
-
-import { AuthDatasourceImpl, AuthRepositoryImpl } from "../../infrastructure";
+import { UserRepositoryFactory } from "../../infrastructure/repositories/user";
+import { AuthUseCase } from "../../domain";
 import { AuthController } from "./controller";
 import { AuthMiddleware } from "../middlewares/auth.middleware";
+
 
 export class AuthRoutes {
   static get routes(): Router {
     const router = Router();
-    const datasource=new AuthDatasourceImpl();
-    const authRepository=new AuthRepositoryImpl(datasource);
-    const controller = new AuthController(authRepository);
 
+    // Obtiene el repositorio correcto según configuración (MySQL o Mongo)
+    const userRepository = UserRepositoryFactory.create();
+
+    // Instancia del caso de uso de autenticación
+    const authUseCase = new AuthUseCase(userRepository);
+
+    // Controlador principal
+    const controller = new AuthController(authUseCase);
+
+    // Rutas HTTP
     router.post("/login", controller.loginUser);
     router.post("/register", controller.registerUser);
-    router.get('/users', [AuthMiddleware.validateJWT], controller.getUsers);
-    // router.use('/api/products')
-    // router.use('/api/clients')
-    // router.use('/api/orders')
+    router.get("/users", [AuthMiddleware.validateJWT(userRepository)], controller.getUsers);
+
     return router;
   }
 }

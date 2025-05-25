@@ -13,6 +13,7 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.15.18",
+    "prisma": "^6.8.2",
     "rimraf": "^6.0.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
@@ -22,6 +23,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@prisma/client": "^6.8.2",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
     "env-var": "^7.5.0",

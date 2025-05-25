@@ -1,10 +1,15 @@
 import { Request, response, Response } from "express";
-import { AuthRepository, CustomError, LoginUser, RegisterUser, RegisterUserDto } from "../../domain";
+import {
+  AuthRepository,
+  AuthUseCase,
+  CustomError,
+  RegisterUserDto,
+} from "../../domain";
 import { UserModel } from "../../data/mongodb";
 import { LoginUserDto } from "../../domain/dtos/auth/login-user.dto";
 
 export class AuthController {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(private readonly useCase: AuthUseCase) {}
 
   private handleError = (error: unknown, res: Response) => {
     if (error instanceof CustomError) {
@@ -28,8 +33,7 @@ export class AuthController {
     }
 
     try {
-      const registerUseCase=new RegisterUser(this.authRepository);
-      const registerData=await registerUseCase.execute(registerUserDto);
+      const registerData = await this.useCase.register(registerUserDto);
       res.json(registerData);
     } catch (error) {
       this.handleError(error, res);
@@ -37,7 +41,7 @@ export class AuthController {
   };
 
   loginUser = async (req: Request, res: Response) => {
-    const [error, loginUserDto]=LoginUserDto.create(req.body);
+    const [error, loginUserDto] = LoginUserDto.create(req.body);
 
     if (error || !loginUserDto) {
       res.status(400).json({ message: "Invalid input", error });
@@ -45,28 +49,21 @@ export class AuthController {
     }
 
     try {
-      const loginUseCase=new LoginUser(this.authRepository);
-      const loginData=await loginUseCase.execute(loginUserDto);
+      const loginData = await this.useCase.login(loginUserDto);
       res.json(loginData);
     } catch (error) {
       this.handleError(error, res);
     }
-
   };
 
-  getUsers = async (req: Request, res: Response) => {
+  getUsers = async (req: Request, res: Response): Promise<void> => {
     try {
       const user = (req as any).user;
-      const users = await UserModel.find();
+      const users = await this.useCase.getUsers();
 
-      res.json({
-        users,
-        // user,
-        token: user,
-        // userInfoFromToken: req.user,
-      });
-    } catch (error) {
-      this.handleError(error, res);
+      res.json({ users, token: user });
+    } catch (err) {
+      this.handleError(err, res);
     }
   };
 }

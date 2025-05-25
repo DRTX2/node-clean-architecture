@@ -3,3 +3,5 @@ node_modules/
 dist/
 build/
 mongo
+mysql
+/src/generated/prisma

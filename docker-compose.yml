@@ -10,3 +10,15 @@ services:
     ports:
       - 27817:27017
 # docker exec -it <nombre_o_id_del_contenedor> mongosh -u root -p root --authenticationDatabase admin
+  mysql-db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - 3308:3306
