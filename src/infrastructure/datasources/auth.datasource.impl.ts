@@ -6,6 +6,7 @@ import {
   RegisterUserDto,
   UserEntity,
 } from "../../domain";
+import { LoginUserDto } from "../../domain/dtos/auth/login-user.dto";
 import { UserMapper } from "../mappers/user.mapper";
 
 type HashFunction = (password: string) => string;
@@ -34,6 +35,23 @@ export class AuthDatasourceImpl implements AuthDataSource {
       await user.save();
 
       // map response to an userEntity(todo)
+      return UserMapper.userEntityFromObject(user);
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      console.error(error);
+      throw CustomError.internalServerError();
+    }
+  }
+  
+  async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const { email, password } = loginUserDto;
+    try {
+      // verificate if email is already registered
+      const user = await UserModel.findOne({ email });
+      if (!user) throw CustomError.badRequest("Email not registered");
+
       return UserMapper.userEntityFromObject(user);
     } catch (error) {
       if (error instanceof CustomError) {

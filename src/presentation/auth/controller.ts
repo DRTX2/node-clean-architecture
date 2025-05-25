@@ -1,7 +1,7 @@
 import { Request, response, Response } from "express";
-import { AuthRepository, CustomError, RegisterUserDto } from "../../domain";
-import { JwtAdapter } from "../../config";
+import { AuthRepository, CustomError, LoginUser, RegisterUser, RegisterUserDto } from "../../domain";
 import { UserModel } from "../../data/mongodb";
+import { LoginUserDto } from "../../domain/dtos/auth/login-user.dto";
 
 export class AuthController {
   constructor(private readonly authRepository: AuthRepository) {}
@@ -28,24 +28,30 @@ export class AuthController {
     }
 
     try {
-      const user = await this.authRepository.register(registerUserDto);
-      const token = await JwtAdapter.generateToken({
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      });
-      
-      res.json({
-        user,
-        token,
-      });
+      const registerUseCase=new RegisterUser(this.authRepository);
+      const registerData=await registerUseCase.execute(registerUserDto);
+      res.json(registerData);
     } catch (error) {
       this.handleError(error, res);
     }
   };
 
-  loginUser = (req: Request, res: Response) => {
-    res.json("loginUser controller");
+  loginUser = async (req: Request, res: Response) => {
+    const [error, loginUserDto]=LoginUserDto.create(req.body);
+
+    if (error || !loginUserDto) {
+      res.status(400).json({ message: "Invalid input", error });
+      return;
+    }
+
+    try {
+      const loginUseCase=new LoginUser(this.authRepository);
+      const loginData=await loginUseCase.execute(loginUserDto);
+      res.json(loginData);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+
   };
 
   getUsers = async (req: Request, res: Response) => {

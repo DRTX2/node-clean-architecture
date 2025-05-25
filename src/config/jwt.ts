@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { envs } from "./envs";
 
-type StringValue = `${number}${'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y'}`;
+export type StringValue = `${number}${'ms' | 's' | 'm' | 'h' | 'd' | 'w' | 'y'}`;
 
 // Clave secreta fija
 const JWT_SECRET = envs.JWT_SEED;
