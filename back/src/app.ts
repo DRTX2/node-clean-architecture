@@ -1,6 +1,6 @@
 import { envs } from "./config";
 import { MongoDatabase } from "./data/mongodb";
-import { MySQLDatabase } from "./data/mysql/mysql-database";
+import { MySQLDatabase } from "./data/mysqldb/mysql-database";
 import { AppRoutes } from "./presentation/routes";
 import { AppServer } from "./presentation/server";
 

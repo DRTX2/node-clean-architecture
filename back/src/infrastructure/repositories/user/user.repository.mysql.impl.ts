@@ -1,4 +1,4 @@
-import { MySQLDatabase } from "../../../data/mysql/mysql-database";
+import { MySQLDatabase } from "../../../data/mysqldb/mysql-database";
 import { UserEntity, UserRepository } from "../../../domain";
 import { UserMapper } from "../../mappers/user.mapper";
 

@@ -1,5 +1,5 @@
 import { BcryptAdapter } from "../../config";
-import { MySQLDatabase } from "../../data/mysql/mysql-database";
+import { MySQLDatabase } from "../../data/mysqldb/mysql-database";
 import {
   AuthDataSource,
   CustomError,
